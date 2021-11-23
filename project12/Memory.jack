@@ -1,0 +1,83 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/12/Memory.jack
+
+/**
+ * This library provides two services: direct access to the computer's main
+ * memory (RAM), and allocation and recycling of memory blocks. The Hack RAM
+ * consists of 32,768 words, each holding a 16-bit binary number.
+ */ 
+class Memory {
+	static Array ram, heap;
+	static int freelist;
+
+    /** Initializes the class. */
+    function void init() {
+		let ram = 0;
+		let heap = 2048;
+		let freelist = 2048;
+		let heap[0] = 0;
+		let heap[1] = 14335;
+		return;
+    }
+
+    /** Returns the RAM value at the given address. */
+    function int peek(int address) {
+		if (heap = 0) {do Memory.init();}
+		return ram[address];
+    }
+
+    /** Sets the RAM value at the given address to the given value. */
+    function void poke(int address, int value) {
+		if (heap = 0) {do Memory.init();}
+		let ram[address] = value;
+		return;
+    }
+
+    /** Finds an available RAM block of the given size and returns
+     *  a reference to its base address. */
+    function int alloc(int size) {
+		var point pointer;
+		var int s_available;
+
+		if (heap = 0) {do Memory.init();}
+		let pointer = freelist;
+		let s_available = pointer[1];
+		
+		while (ram[pointer + 1] < (size + 2))
+		{
+			let pointer = ram[pointer];
+			let s_available = pointer[1];
+		}
+		
+		//add an error to when there is not enough memory
+		let s_available = s_available - size - 2;
+		let pointer[s_available + 1] = size;
+		let pointer[s_available] = 0;
+		let pointer[1] = s_available;
+		return pointer + s_available + 2;
+		
+    }
+	
+	
+
+    /** De-allocates the given object (cast as an array) by making
+     *  it available for future allocations. */
+    function void deAlloc(Array o) {
+		var point pointer;
+		var int a, b;
+
+		let pointer = freelist;
+		let a = pointer;
+		while (ram[pointer] > 0)
+		{
+			let pointer = ram[pointer];
+			let a = pointer;
+		}
+		//do Output.printInt(o);
+		//do Output.println();
+		let ram[a] = o - 2;
+		return;
+    }    
+}

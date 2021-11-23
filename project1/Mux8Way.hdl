@@ -1,0 +1,18 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux8way.hdl
+
+/**
+ * 8-way multiplexor:
+ */
+
+CHIP Mux8Way {
+    IN a, b, c, d, e, f, g, h, sel[3];
+    OUT out;
+
+    PARTS:
+    Mux4Way(a=a, b=c, c=e, d=g, sel[0]=sel[1], sel[1]=sel[2], out=out1);
+    Mux4Way(a=b, b=d, c=f, d=h, sel[0]=sel[1], sel[1]=sel[2], out=out2);
+    Mux(a=out1, b=out2, sel=sel[0], out=out);	  
+}

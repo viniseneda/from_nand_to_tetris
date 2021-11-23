@@ -1,0 +1,29 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/Control.hdl
+
+CHIP Control {
+
+    IN  control[3],        
+        zr, 
+        ng;           
+                         
+    OUT out;
+
+    PARTS:
+    And(a=notz, b=notn, out=outa);
+    Not(in=zr, out=notz);
+    Not(in=ng, out=notn);
+    Or(a=zr, b=notn, out=outb);
+    Or(a=outa, b=ng, out=outc);
+    Or(a=zr, b=ng, out=outd);
+
+    Mux(a=false, b=outa, sel=control[0], out=out1);
+    Mux(a=zr, b=outb, sel=control[0], out=out2);
+    Mux(a=ng, b=outc, sel=control[0], out=out3);
+    Mux(a=outd, b=true, sel=control[0], out=out4);
+    Mux(a=out1, b=out2, sel=control[1], out=out5);
+    Mux(a=out3, b=out4, sel=control[1], out=out6);
+    Mux(a=out5, b=out6, sel=control[2], out=out);
+}

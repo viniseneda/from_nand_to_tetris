@@ -1,0 +1,42 @@
+class Printer 
+{
+	field int size, scale, cursor;
+	
+	constructor Printer new(int sc)
+	{
+		let size = 512/sc;
+		let scale = sc;
+		let cursor = 0;
+		return this;
+	}
+	
+	method int get_size() {return size;}
+	
+	method void set_cursor(int n) {let cursor = n; return;}
+
+	method void print_line(Array line)
+	{
+		var int i, x, y;
+	
+		let i = 0;
+		let x = 0;
+		let y =  cursor;
+		while (i < size)
+		{
+			if (line[i] = 0)
+			{
+				do Screen.setColor(false);
+			}
+			else
+			{
+				do Screen.setColor(true);
+			}
+
+			do Screen.drawRectangle(x, y, (x + scale), (y + scale));
+			let x = x + scale;
+			let i = i + 1;
+		}
+		if (cursor < 256) {let cursor = cursor + scale;}
+		return;
+	}
+}

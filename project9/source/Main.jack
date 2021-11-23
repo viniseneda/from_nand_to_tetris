@@ -1,0 +1,91 @@
+class Main
+{
+	function void start()
+	{
+		do Output.printString("Elementary Cellular Automaton Generator");
+		do Output.println(); do Output.println();
+		do Output.printString("simple generator of one-dimensional cellular automata. To use type a rule of 8 bits. Once the program started running you can generate the next screen of the same rule by pressing (x).");
+		
+		do Output.println(); do Output.println();
+		do Output.printString("press (q) to reset the program.");
+		do Output.println(); do Output.println();
+		do Output.printString("Suggestions:");
+		do Output.println();	
+		do Output.printString("Rule 30:  00011110");
+		do Output.println();	
+		do Output.printString("Rule 102: 01100110");
+		do Output.println();	
+		do Output.printString("Rule 126: 01111110");
+		do Output.println();	
+		do Output.printString("Rule 169: 10101001");
+		do Output.println();	
+		do Output.printString("Rule 101: 01100101");
+		do Output.println();	
+		do Output.printString("Rule 150: 10010110");
+		do Output.println(); do Output.println();
+		do Output.printString("For more info : ");
+		do Output.println();	
+		do Output.printString("https://mathworld.wolfram.com/ElementaryCellularAutomaton.html");
+		do Output.println(); do Output.println();
+		return;
+	}
+
+	//initializes the objects, and control the running of the program
+	function void main()
+	{
+		var Printer p;
+		var Generator g;
+		var String last, seed;
+		var int scale, size, i;
+		var char key;
+		var boolean exit;
+		
+		do Main.start();
+		let seed = Keyboard.readLine("Rule: ");
+		let scale = 3;
+		let p = Printer.new(scale);
+		let size = p.get_size();
+		let g = Generator.new(seed, size);
+
+		while(true)
+		{	
+			let i = 0;
+			do p.set_cursor(0);
+			while (i < ((256 / scale) - 1))
+			{
+				let last = g.get_last();
+				do p.print_line(last);
+				do g.process();
+				let i = i + 1;
+			}
+			while (~exit)
+			{
+				while (key = 0)
+				{
+					let key = Keyboard.keyPressed();
+				}
+				if	(key = 81) { let exit = true; do Sys.wait(100); let key = 0;}
+				if	(key = 88) 
+				{
+					do p.set_cursor(0);
+					let i = 0;
+					while (i < ((256 / scale) - 1))
+					{
+						let last = g.get_last();
+						do p.print_line(last);
+						do g.process();
+						let i = i + 1;
+					}
+					let key = 0;
+				}
+			}
+			let exit = false;
+			do Output.moveCursor(0,0);
+			do Screen.clearScreen();
+			do Main.start();
+			let seed = Keyboard.readLine("Rule: ");
+			do g.reset(seed);
+		}
+		return;
+	}
+}
